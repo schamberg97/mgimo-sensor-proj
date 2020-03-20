@@ -1,0 +1,48 @@
+
+extends layout
+
+
+block content
+	- data = typeof(data) != 'undefined' ? data : { }
+	#set-target-values-form-container.center-vertical
+		form.card.card-body.bg-light(method='post')#set-target-values-form
+			h2 Set target values
+			h6#sub Please note that this is an alpha release and you need to manually validate the data
+			hr
+	
+			.form-group.row
+				label.col-sm-4.col-form-label.col-form-label-sm Temperature
+				.col-sm-8
+					input.form-control#temperature-tf(type='text', name='temperature', value= data.temperature)
+			
+			.form-group.row
+				label.col-sm-4.col-form-label.col-form-label-sm Relative humidity
+				.col-sm-8
+					input.form-control#humidity-tf(type='text', name='humidity', value=data.humidity)
+					
+	
+			hr
+			.form-buttons.row.mx-auto
+				.col-md-6
+					button(type='button')#set-target-values-btn1.btn.btn-outline-dark
+				.col-md-6
+					button(type='submit')#set-target-values-btn2.btn.btn-primary
+
+block scripts
+	script.
+		$('#set-target-values-btn1').html('Back');
+		$('#set-target-values-btn1').on('click', function() {
+			window.history.back();
+		})
+		$('#set-target-values-btn1').addClass('btn-danger');
+		$('#set-target-values-btn2').html('Update');
+		$('#set-target-values-form').ajaxForm({
+			url: '/setTargetValues/',
+			
+			success	: function(responseText, status, xhr, $form){
+				alert('successfully updated target values')
+			},
+			error : function(e){
+				alert('Failed to update target values. Error: ' + e)
+			}
+		});

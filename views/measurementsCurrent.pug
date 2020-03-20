@@ -1,0 +1,41 @@
+
+extends layout
+
+block content
+
+	.container.mx-auto.text-center.mt-5
+		h2 Observed data
+		.row.col-md-12
+			.col-md-6
+				img(src="/img/humidity.png" height="42" width="42")
+				h3 Humidity
+				h4
+					span#humidityNum --
+					|  %
+			.col-md-6
+				img(src="/img/temperature.png" height="42" width="42")
+				h3 Temperature
+				h4
+					span#temperatureNum --
+					span#temperatureUnits  °C
+	.container.mx-auto.text-center.mt-5
+		h2 Target values
+		.row.col-md-12
+			.col-md-6
+				img(src="/img/humidity.png" height="42" width="42")
+				h3 Humidity
+				h4
+					span#humidityNumTarget --
+					|  %
+			.col-md-6
+				img(src="/img/temperature.png" height="42" width="42")
+				h3 Temperature
+				h4
+					span#temperatureNumTarget --
+					span#temperatureUnitsTarget  °C
+		a.mt-4(href='/measurements/setTarget/') 
+			h4 Set new target values
+			
+
+block scripts
+	script(src='/js/views/currentMeasurements.js')

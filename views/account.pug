@@ -1,0 +1,42 @@
+block cssmods
+	link(rel='stylesheet', href='/css/datepicker.min.css')
+// preset form values if we receive a userdata object //
+- user = typeof(udata) != 'undefined' ? udata : { }
+// store the userId on the client side in a hidden input field //
+input(type='hidden', value= user._id)#userId
+
+#account-form-container.center-vertical
+	form.card.card-body.bg-light(method='post')#account-form
+		h2
+		h6#sub
+		hr
+
+		.form-group.row
+			label.col-sm-4.col-form-label.col-form-label-sm Username
+			.col-sm-8
+				input.form-control#user-tf(type='text', name='user', value= user.user).disabled
+		
+		if user._id
+			.form-group.row.margin-zero
+				label.col-sm-4.col-form-label.col-form-label-sm Old Password (*)
+				.col-sm-8
+					input.form-control#oldPass-tf(type='password', name='oldPass', value='')
+		
+		.form-group.row.margin-zero
+			label.col-sm-4.col-form-label.col-form-label-sm Password
+			.col-sm-8
+				input.form-control#pass-tf(type='password', name='pass', value='')
+				
+		
+		label <span style="font-weight:bold">(*)</span> - Needed to change password
+
+		hr
+		.form-buttons
+			button(type='button')#account-form-btn1.btn.btn-outline-dark
+			button(type='submit')#account-form-btn2.btn.btn-primary
+
+// display form errors in a custom modal window //
+
+include modals/form-errors
+
+block scripts
