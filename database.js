@@ -2,6 +2,8 @@ var fs = require('fs')
 const spawn = require('child_process').spawn;
 const MongoClient = require('mongodb').MongoClient;
 const os = require('os')
+var path = require('path')
+
 
 if (!fs.existsSync(`${__dirname}/database/`)) {
     fs.mkdir(`${__dirname}/database/`, { recursive: true }, (err) => {
@@ -20,9 +22,6 @@ if (!fs.existsSync(`${__dirname}/database/`)) {
 var mongoPath
 if (os.platform == "darwin") {
 	mongoPath = `${__dirname}/platform/mac/bin/mongod`;
-}
-else if (os.platform == "win32") {
-	mongoPath = `${__dirname}/platform/win64/bin/mongod.exe`;
 }
 else {
 	mongoPath = `mongod`;
@@ -48,9 +47,6 @@ pipe.on('error', (err) => {
 	}
 	else {
 		if (os.platform == "darwin") {
-			console.log('Something went seriously wrong. Please check that the package is not corrupt. If problem persists, contact support.')
-		}
-		else if (os.platform == "win32") {
 			console.log('Something went seriously wrong. Please check that the package is not corrupt. If problem persists, contact support.')
 		}
 		else {
@@ -151,8 +147,9 @@ function getTargetValues(callback) {
 		let db = getDb();
 		let config = db.collection('config')
 		config.findOne({ type: "targetValues" }, function (e, o) {
+			//let lastData = require(path.resolve(__dirname + '/lastResult.js'))
 			if (e) {
-				callback(e, null)
+				callback(e)
 			}
 			else {
 				callback(null, o)

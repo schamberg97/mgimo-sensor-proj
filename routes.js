@@ -165,7 +165,13 @@ module.exports = function (app) {
                 }
                 else {
                     //console.log(o)
-                    res.render('setTarget', {data: {temperature: o.temperature, humidity: o.humidity}})
+                    if (!o) {
+                        o = {
+                            temperature: 0,
+                            humidity: 0
+                        }
+                    }
+                    res.render('setTarget', {data: {temperature: o.temperature || 0, humidity: o.humidity || 0}})
                 }
             })
             
@@ -293,7 +299,10 @@ module.exports = function (app) {
                     
                 }
                 else {
-                    delete o._id
+                    if (o) {
+                        delete o._id
+                    }
+                    
                     resObj = {
                         code: 200,
                         status: "ok",
