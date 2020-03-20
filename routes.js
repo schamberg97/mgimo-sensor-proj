@@ -11,6 +11,7 @@ const rateLimiter = new RateLimiterMongo({
 var prepareData = require(path.resolve(__dirname + '/prepareData.js'))
 var crypto = require('crypto')
 var simpleMathOps = require(path.resolve(__dirname + '/simpleMathOps.js'))
+var moment=require('moment')
 
 
 var AM = require(path.resolve(__dirname + '/accountManager.js'))
@@ -258,6 +259,7 @@ module.exports = function (app) {
                                     measurementsUnits = ['default', 'default', 'default', 'default']
                                     preliminaryResult = doJob(req, res, measurements, measurementsUnits, item)
                                 }
+                                preliminaryResult.time = moment.unix(item.time).format()
                                 finalResults.push(preliminaryResult)
                             })
                             var resObj = {
