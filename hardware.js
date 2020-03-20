@@ -78,9 +78,9 @@ function prepareBoard() {
 			databaseComponent.getTargetValues(function(e,o) {
 				if (o) {
 					console.log(o)
-					let humidityDifference = currentMeasurements.humidity - o.humidity
+					let humidityDifference = simpleMathOps.difference(currentMeasurements.humidity, o.humidity)
 					let humidityDifferenceAbs = Math.abs(humidityDifference)
-					let tempDifference = currentMeasurements.temperature - o.temperature
+					let tempDifference = simpleMathOps.difference(currentMeasurements.temperature, o.temperature)
 					let tempDifferenceAbs = Math.abs(tempDifference)
 					if (humidityDifference < 0 && humidityDifferenceAbs > 0.25) {
 						humidify(humidityDifferenceAbs)
