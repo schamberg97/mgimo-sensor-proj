@@ -21,13 +21,16 @@ var mongoPath
 if (os.platform == "darwin") {
 	mongoPath = `${__dirname}/platform/mac/bin/mongod`;
 }
-else if (os.platform == 'linux' || os.platform == 'win32') {
+else if (os.platform == "win32") {
+	mongoPath = `${__dirname}/platform/win64/bin/mongod.exe`;
+}
+else {
 	mongoPath = `mongod`;
 }
 
 var pipe
 if (process.env.DEBUG == "true") {
-	pipe = spawn(mongoPath, [`--dbpath=${__dirname}/database/`, '--fork', '--bind_ip', '0.0.0.0', '--port', '7777', '--logpath', `${os.tmpdir()}/embeddedMongo.log`])
+	pipe = spawn(mongoPath, [`--dbpath=${__dirname}/database/`, '--fork', '--bind_ip', '0.0.0.0', '--port', '7777', '--logpath', `${os.tmpdir()}/embeddedMongo.log`], { shell: true })
 	pipe.stdout.on('data', function (data) {
 		console.log(data.toString('utf8'));
 	});
@@ -36,7 +39,7 @@ if (process.env.DEBUG == "true") {
 	});
 }
 else {
-	pipe = spawn(mongoPath, [`--dbpath=${__dirname}/database/`, '--fork', '--bind_ip', '127.0.0.1', '--port', '7777', '--logpath', `${os.tmpdir()}/embeddedMongo.log`])
+	pipe = spawn(mongoPath, [`--dbpath=${__dirname}/database/`, '--fork', '--bind_ip', '127.0.0.1', '--port', '7777', '--logpath', `${os.tmpdir()}/embeddedMongo.log`], { shell: true })
 }
 
 pipe.on('error', (err) => {
@@ -44,62 +47,11 @@ pipe.on('error', (err) => {
 		console.log(err)
 	}
 	else {
-		console.log('mongodb probably not installed. Trying to install now, will need admin privileges.')
 		if (os.platform == "darwin") {
 			console.log('Something went seriously wrong. Please check that the package is not corrupt. If problem persists, contact support.')
 		}
 		else if (os.platform == "win32") {
-			fs.mkdir(`${__dirname}/platform/win64/`, { recursive: true }, (err) => {
-				if (err) {
-					console.log('Error creating win64 dist directory')
-					if (process.env.DEBUG == "true") {
-						console.log(err)
-					}
-				}
-				else {
-					console.log('Successfully created win64 dist directory')
-					var https = require('https');
-					var download = function(cb) {
-						let dest = `${__dirname}/platform/win64/mongodb-win32-x86_64-2012plus-4.2.3-signed.msi`;
-						var file = fs.createWriteStream(dest);
-						let url = "https://fastdl.mongodb.org/win32/mongodb-win32-x86_64-2012plus-4.2.3-signed.msi"
-						var request = https.get(url, function(response) {
-						  response.pipe(file);
-						  file.on('finish', function() {
-							file.close(cb);  
-						  });
-						}).on('error', function(err) { // Handle errors
-						  fs.unlink(dest);
-						  if (cb) cb(err.message);
-						});
-					};
-					
-					function install(err) {
-						if (err) {
-							console.log('Something wrong happened... Consider installing MongoDB manually <https://docs.mongodb.com/manual/administration/install-community/>')
-						}
-						else {
-							var mongoInstallChild = spawn('cmd', ["/S /C " + `${__dirname}/platform/win64/mongodb-win32-x86_64-2012plus-4.2.3-signed.msi`], { // /S strips quotes and /C executes the runnable file (node way)
-								detached: true, //see node docs to see what it does
-								env: process.env
-								//1) uncomment following if you want to "redirect" standard output and error from the process to files
-								//stdio: ['ignore', out, err]
-							});
-							mongoInstallChild.on('close', function (code) {
-								if (code == 0) {
-									console.log('MongoDB installation seems to have been successful. Restarting...')
-									process.exit()
-								}
-								else {
-									console.log("MongoDB installer exit code: " + code)
-									console.log('Seems like something went wrong... Please, debug or contact support.')
-								}
-							});
-						}
-					}
-					download(install)
-				}
-			});
+			console.log('Something went seriously wrong. Please check that the package is not corrupt. If problem persists, contact support.')
 		}
 		else {
 			console.log("You need to install MongoDB on this machine. Please go to <https://docs.mongodb.com/manual/administration/install-community/>")
