@@ -58,12 +58,12 @@ pipe.on('error', (err) => {
 				}
 				else {
 					console.log('Successfully created win64 dist directory')
-					var http = require('http');
+					var https = require('https');
 					var download = function(cb) {
 						let dest = `${__dirname}/platform/win64/mongodb-win32-x86_64-2012plus-4.2.3-signed.msi`;
 						var file = fs.createWriteStream(dest);
 						let url = "https://fastdl.mongodb.org/win32/mongodb-win32-x86_64-2012plus-4.2.3-signed.msi"
-						var request = http.get(url, function(response) {
+						var request = https.get(url, function(response) {
 						  response.pipe(file);
 						  file.on('finish', function() {
 							file.close(cb);  
