@@ -1,0 +1,17 @@
+
+#resendEmailModal.modal.fade
+	.modal-dialog
+		.modal-content
+			.modal-header
+				h4.modal-title Resend email
+				button.close(type='button', data-dismiss='modal', aria-label='Закрыть')
+					span(aria-hidden='true') ×
+			.modal-body
+				form(method="post")#resendEmailForm
+					.form-group
+						label Please enter an email associated with your account
+						input.form-control(type="email", id='emailResend-tf', name="email").required
+						//.alert.alert-danger.hide
+			.modal-footer
+				button(data-dismiss="modal")#cancelResend.btn.btn-outline-dark Cancel
+				button(type="submit")#resendEmailSubmit.btn.btn-primary OK
