@@ -5,7 +5,7 @@
 Требования:
 
 1) Node.JS 10+. Все необходимые модули будут установлены автоматически
-2) MongoDB (с приложением включена копия для MacOS и Windows; для Linux и других ОС - см. инструкции после запуска приложения)
+2) MongoDB (с приложением включена копия для MacOS; для Windows, Linux и других ОС - см. инструкции после запуска приложения)
 3) Установленная прошивка Standard Firmata Plus на Arduino. См <https://github.com/firmata/arduino/blob/master/examples/StandardFirmataPlus/StandardFirmataPlus.ino>
 
 Запуск:
