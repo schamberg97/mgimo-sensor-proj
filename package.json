@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "MIPT Student Sensor Project",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Nikolay Shamberg, Sergey Babayan & co.",
   "license": "MIT",
   "dependencies": {
@@ -24,5 +21,10 @@
     "mongodb": "^3.5.4",
     "pug": "^2.0.4",
     "rate-limiter-flexible": "^2.0.0"
+  },
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

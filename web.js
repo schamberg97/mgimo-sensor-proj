@@ -48,14 +48,14 @@ module.exports = function (firmwareVersion, firmwareCodename, port, database) {
     app.use(helmet.hidePoweredBy({ setTo: `QUIK Embedded ${firmwareVersion} ${firmwareCodename}` }))
     app.use(expressSanitizer());
     app.use(session({
-        secret: crypto.randomBytes(64).toString('hex'),
+        secret: "7794901da21ca95e4cea9beda0165644aa60b4954ac82f10aeecd651e3225f96ef78be797ee21053ab1ca8df463dc326260060f6115d7ed569c0865a6924b901",
         saveUninitialized: false,
         resave: false,
         store: new MongoStore({
             client: databaseComponent.getDb('clientOnly'),
             dbName: "z371",
             touchAfter: 24 * 3600, // time period in seconds
-            secret: crypto.randomBytes(64).toString('hex'),
+            secret: "5f6be904b7c1ed7f07c51ea3236b8583fb0fab7c837edc310ca2466dde7b662f390ddd19c01004d1b7f066049d339b2970bfb90d297bada75704d70f26f07e0",
         })
     }));
     

@@ -19,6 +19,7 @@ AM.auth.init(databaseComponent.getDb())
 
 module.exports = function (app) {
 
+
     app.all('*', (req, res, next) => {
         let key = req.ip;
         let pointsToConsume = 2
@@ -444,8 +445,73 @@ module.exports = function (app) {
         }
     })
 
+    app.post('/user/profile/', function (req, res) {
+        if (req.session.user == null) {
+            res.redirect('/user/login/');
+        }
+        else {
+            //var secretAccessToken = req.session.secretAccessToken
+            updateAccount()
+        }
+
+        function updateAccount() {
+            var p0 = new Promise(
+                function (resolve, reject) {
+
+
+                    var oldData;
+                    var newData;
+
+
+                    let parameters = {
+                        id: req.session.user._id,
+                        //dateOfBirthday : dateOfBirthday || dateParser(req.session.user.dateOfBirthday),
+                        //company :  req.body['company'] || req.session.user.company,
+
+                        pass: req.body.pass,
+                        oldPass: req.body.oldPass,
+                    }
+
+                    AM.profile.updateAccount(parameters, function (e, o) {
+                        if (e) {
+                            var resObj = {
+                                code: e.code || 400,
+                                status: e.status || "error",
+                                error: e.error
+                            }
+                            reject(resObj)
+                        } else {
+                            var resObj = {
+                                code: 200,
+                                status: "ok",
+                                data: req.session.user
+                            }
+                            resolve(resObj)
+
+                        }
+                    });
+                }
+            )
+
+            p0
+                .then(function (result) {
+                    console.log(result)
+                    res.status(result.code).json(result)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    res.status(error.code).json(error)
+                });
+        }
+    });
+
     app.all('*', (req,res) => {
-        res.status(404).json({code:404,status:'error',error:'page-not-found'})
+			var resObj = {
+					code: 404,
+					status: "error",
+					error: "not-found", 
+			}
+			res.status(404).json(resObj)
     })
 
 }

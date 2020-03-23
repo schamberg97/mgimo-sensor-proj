@@ -33,7 +33,7 @@ else {
 					console.log('First run record made');
 				  }); 
 				if (!error && (!stderr || stderr.includes('npm WARN'))) {
-					console.log('Successfully installed modules. Resarting...')
+					console.log('Successfully installed modules. Restarting...')
 					process.exit()
 				}
 				else {

@@ -1,9 +1,10 @@
 var fs = require('fs');
-const crypto 		= require('crypto');
+const crypto = require('crypto');
 
 var accounts;
 var path=require('path')
 var simpleMathOps = require(path.resolve(__dirname + '/simpleMathOps.js'))
+var moment = require('moment')
 
 module.exports = {
 	auth: {
@@ -12,15 +13,63 @@ module.exports = {
 		autoLogin,
 		noPassLogin,
 		manualLogin,
-		generateLoginKey
+		generateLoginKey,
+		
 	},
 	profile: {
-		updatePassword
+		updatePassword,
+		updateAccount
 	}
 }
 
 function init(db) {
 	accounts = db.collection('accounts')
+}
+
+function updateAccount(newData, callback) {
+	let findOneAndUpdate = function(data){
+		var o = {
+			
+			companyPosition: data.companyPosition,
+			email : data.email,
+			firstname : data.firstname,
+			
+			lastname : data.lastname,
+			//dateOfBirthday: data.dateOfBirthday,
+			dateUpdate: moment().format('DD-MM-YYYY HH:mm:ss:S')
+		}
+		if (data.pass) o.pass = data.pass;
+		accounts.findOneAndUpdate({_id:getObjectId(data.id)}, {$set:o}, {returnOriginal : false}, callback);
+	}
+	accounts.findOne({_id:getObjectId(newData.id)}, function(e,r) {
+		if (e || r == null) {
+			var error = {
+				code: 401,
+				status: "error",
+				error: "could-not-find-account"
+			}
+			callback(error)
+		}
+		else {
+			saltAndHash(newData.pass, function (hash) {
+				newData.pass = hash;
+				validatePassword(newData.oldPass, r.pass, function (err, res) {
+					if (err || res == null) {
+						var error = {
+							code: 401,
+							status: "error",
+							error: "wrong-old-pass"
+						}
+						callback(error)
+					}
+					else {
+						findOneAndUpdate(newData);
+					}
+				})
+			})
+
+		}
+	})
 }
 
 function checkIfUserIsFree(user, callback) {
@@ -89,7 +138,7 @@ function manualLogin (user, pass, callback)
 
 function updatePassword (passKey, newPass, callback)
 {
-	const hasher = crypto.createHash('sha256');
+	//const hasher = crypto.createHash('sha256');
 	saltAndHash(newPass, function(hash){
 		newPass = hash;
 		accounts.findOneAndUpdate({passKey:passKey}, {$set:{pass:newPass}, $unset:{passKey:''}}, {returnOriginal : false}, callback);

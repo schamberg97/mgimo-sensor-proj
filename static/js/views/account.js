@@ -5,6 +5,7 @@ $(document).ready(function(){
 	var av = new AccountValidator();
 	
 	$('#account-form').ajaxForm({
+		url: '/user/profile/',
 		beforeSubmit : function(formData, jqForm, options){
 			if (av.validateForm() == false){
 				return false;

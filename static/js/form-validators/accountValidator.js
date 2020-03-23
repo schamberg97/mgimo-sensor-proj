@@ -3,8 +3,8 @@ function AccountValidator()
 {
 // build array maps of the form inputs & control groups //
 //							0				1				2				3				4					5					6						7					8					9
-	this.formFields = [$('#name-tf'), $('#email-tf'), $('#user-tf'), $('#pass-tf'), $('#nameLast-tf'), $('#nameFirst-tf'), $('#nameMiddle-tf'), $('#company-tf'), $('#companyPosition-tf'), $('#oldPass-tf')];
-	this.controlGroups = [$('#name-cg'), $('#email-cg'), $('#user-cg'), $('#pass-cg'), $('#nameLast-cg'), $('#nameFirst-cg'), $('#nameMiddle-cg'), $('#company-cg'), $('#companyPosition-cg'), $('#oldPass-cg')];
+	this.formFields = [$('#name-tf'), $('#email-tf'), $('#user-tf'), $('#pass-tf'), $('#oldPass-tf')];
+	this.controlGroups = [$('#name-cg'), $('#email-cg'), $('#user-cg'), $('#pass-cg'), $('#oldPass-cg')];
 	
 // bind the form-error modal window to this controller to display any errors //
 	
@@ -39,22 +39,6 @@ function AccountValidator()
 		}
 	}
 	
-	this.validateCompany = function(s)
-	{
-		return s.length >= 3;
-	}
-	
-	this.validateFirstName = function(s) {
-		return s.length >= 2;
-	}
-	
-	this.validateMiddleName = function(s) {
-		return s.length >= 6;
-	}
-	
-	this.validateLastName = function(s) {
-		return s.length >= 1;
-	}
 	
 	this.validateEmail = function(e)
 	{
@@ -62,25 +46,7 @@ function AccountValidator()
 		return re.test(e);
 	}
 	
-	this.validateDate = function(str) {
-		str = str.replace(/\//g, '-');
-		// replaces "/"
-		str = str.replace(/\./g, '-');
-		// replaces "."
-		if (isISO8601(str) == false){
-			return false;
-		}
-		else if (isISO8601(str) == true)	{
-			var todaysDate = new Date();
-			var pickedDate = Date.parse(str);
-			if (pickedDate <= todaysDate) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}	
-	}
+	
 	
 	this.showErrors = function(a)
 	{
@@ -93,11 +59,6 @@ function AccountValidator()
 
 }
 
-AccountValidator.prototype.showInvalidEmail = function()
-{
-	this.controlGroups[1].addClass('error');
-	this.showErrors(['That email address is already in use.']);
-}
 
 AccountValidator.prototype.showInvalidUserName = function()
 {
@@ -109,39 +70,14 @@ AccountValidator.prototype.validateForm = function()
 {
 	var e = [];
 	for (var i=0; i < this.controlGroups.length; i++) this.controlGroups[i].removeClass('error');
-	if (this.validateEmail(this.formFields[1].val()) == false) {
-		this.controlGroups[1].addClass('error'); e.push('Please Enter A Valid Email');
-	}
-	if (this.validateName(this.formFields[2].val()) == false) {
-		this.controlGroups[2].addClass('error');
-		e.push('Please Choose A Username');
-	}
+
 	if (this.validatePassword(this.formFields[3].val()) == false) {
 		this.controlGroups[3].addClass('error');
 		e.push('Password Should Be At Least 9 Characters');
 	}
-	if (this.validateLastName(this.formFields[4].val()) == false) {
+
+	if (this.validateOldPassword(this.formFields[4].val()) == false) {
 		this.controlGroups[4].addClass('error');
-		e.push('Last Name Should Be At Least 1 Character');
-	}
-	if (this.validateFirstName(this.formFields[5].val()) == false) {
-		this.controlGroups[5].addClass('error');
-		e.push('First Name Should Be At Least 2 Characters');
-	}
-	if (this.validateMiddleName(this.formFields[6].val()) == false) {
-		this.controlGroups[6].addClass('error');
-		e.push('Middle Name Should Be At Least 6 Characters');
-	}
-	if (this.validateCompany(this.formFields[7].val()) == false) {
-		this.controlGroups[7].addClass('error');
-		e.push('Please, enter valid company name!');
-	}
-	if (this.validateCompany(this.formFields[8].val()) == false) {
-		this.controlGroups[8].addClass('error');
-		e.push('Please, enter valid company position!');
-	}
-	if (this.validateOldPassword(this.formFields[9].val()) == false) {
-		this.controlGroups[9].addClass('error');
 		e.push('Please, enter your old password');
 	}
 	if (e.length) this.showErrors(e);
